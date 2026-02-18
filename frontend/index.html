@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BriefAI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-lg">
+        <h1 class="text-3xl font-bold text-center mb-6 text-blue-600">TIB-BriefAI</h1>
+        <h2 class="text-3xl font-bold text-center mb-6 text-blue-600">Corporate Text Generator</h2>
+        <form id="form" class="space-y-4">
+            <select name="perfil" class="w-full p-3 border ...">
+                <option value="Traditional">Traditional</option>
+                <option value="Startup">Startup</option>
+                <option value="Technical">Technical</option>
+            </select>
+
+            <select name="language" class="w-full p-3 border ...">
+                <option value="English">English (default)</option>
+                <option value="Portuguese">Português</option>
+                <option value="Spanish">Español</option>
+            </select>
+
+            <input name="tipo" placeholder="Text type (e.g. email, announcement)" class="w-full p-3 border ...">
+            <input name="publico" placeholder="Target audience" class="w-full p-3 border ...">
+            <input name="tom" placeholder="Tone of voice (e.g. formal, motivational)" class="w-full p-3 border ...">
+            <textarea name="topicos" placeholder="Main topics (one per line)" rows="4"
+                class="w-full p-3 border ..."></textarea>
+
+            <button type="submit"
+                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition">
+                Generate Text
+            </button>
+        </form>
+
+        <div id="resultado" class="mt-6 p-4 border border-gray-200 rounded-xl bg-gray-50 min-h-[100px] text-sm"></div>
+
+        <script>
+            const form = document.getElementById('form');
+            const resultado = document.getElementById('resultado');
+
+            form.onsubmit = async (e) => {
+                e.preventDefault();
+                resultado.innerHTML = `<p class="text-gray-500">Generating text...</p>`;
+
+                const data = Object.fromEntries(new FormData(form));
+
+                const res = await fetch("/gerar", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data)
+                });
+
+                const json = await res.json();
+                resultado.innerHTML = `
+                <pre class="whitespace-pre-wrap font-sans">${json.texto}</pre>
+                <p class="text-xs text-gray-400 mt-3">Tokens used: ${json.tokens_usados}</p>
+            `;
+            };
+        </script>
+</body>
+
+</html>

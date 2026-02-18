@@ -1,0 +1,19 @@
+services:
+  briefai:
+    build: .
+    container_name: briefai
+    restart: always
+    env_file:
+      - .env
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.briefai.rule=Host(`briefai.tib-usa.app`)"
+      - "traefik.http.routers.briefai.entrypoints=websecure"
+      - "traefik.http.routers.briefai.tls.certresolver=myresolver"
+      - "traefik.http.services.briefai.loadbalancer.server.port=8000"
+    networks:
+      - web
+
+networks:
+  web:
+    external: true
