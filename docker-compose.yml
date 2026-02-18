@@ -12,8 +12,8 @@ services:
       - "traefik.http.routers.briefai.tls.certresolver=myresolver"
       - "traefik.http.services.briefai.loadbalancer.server.port=8000"
     networks:
-      - web
+      - tib_network
 
 networks:
-  web:
+  tib_network:
     external: true
